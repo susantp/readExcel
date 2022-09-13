@@ -8,7 +8,6 @@ function App() {
   const handleChange = async (event) => {
     const file = ref.current.files[0]
     readXlsxFile(file).then(rows => {
-      console.log(rows)
       setRows(rows)
     })
   }
