@@ -4,13 +4,29 @@ import React, { useRef, useState } from 'react'
 
 function App() {
   const ref = useRef(null)
-  const [rows, setRows] = useState([])
+  const [data, setData] = useState({ rows: [], errors: [] })
+
+  const map = {
+    'name': 'name',
+    'age': 'age',
+    'address': 'address'
+  }
+
   const handleChange = async (event) => {
     const file = ref.current.files[0]
-    readXlsxFile(file).then(rows => {
-      setRows(rows)
+    readXlsxFile(file, { map }).then(rows => {
+      setData(rows)
     })
   }
+
+  const Row = ({ row }) =>
+  (
+    <tr>
+      <td>{row.name}</td>
+      <td>{row.age}</td>
+      <td>{row.address}</td>
+    </tr>
+  )
   return (
     <div className="App">
       <input
@@ -19,24 +35,14 @@ function App() {
         ref={ref}
         onChange={handleChange}
       />
-      {
-        rows.length > 0 &&
-        <table>
-          <tbody>
-            {
-              rows.map(row => (
-                <tr>
-                  {
-                    row.map(field => (
-                      <td>{field}</td>
-                    ))
-                  }
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
-      }
+
+      <table>
+        <tbody>
+          {
+            data.rows.map(row => <Row key={row.name} row={row} />)
+          }
+        </tbody>
+      </table>
     </div>
   );
 }
